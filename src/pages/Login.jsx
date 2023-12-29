@@ -31,7 +31,7 @@ function Login() {
     return (
         <>
 
-            <div class="login-box">
+            <div class="login-box container mt-5">
                 <div class="login-logo">
                     <b>POS Project</b>
                 </div>
