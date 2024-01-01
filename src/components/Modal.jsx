@@ -6,7 +6,7 @@ function Modal(props) {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="exampleModalLabel">{props.title}</h5>
-                            <button id='btnClose' type="button" className="fa fa-times" data-dismiss="modal" aria-label="Close"></button>
+                            <button id='btnClose' type="button" className="fa fa-times btnClose" data-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
                             {props.children}
