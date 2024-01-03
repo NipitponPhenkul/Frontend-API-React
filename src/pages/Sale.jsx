@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import Config from '../config';
 import axios from 'axios';
 import Modal from '../components/Modal';
+import * as dayjs from 'dayjs';
 
 function Sale() {
     const [barcode, setBarcode] = useState();
@@ -14,6 +15,8 @@ function Sale() {
     const [billSaleDetailQty, setBillSaleDetailQty] = useState(0);
     const [inputMoney, setInputMoney] = useState(0);
     const [returnMoney, setReturnMoney] = useState(0);
+    const [LastBillSaleDetails, setLastBillSaleDetails] = useState([]);
+    const [historyBillSales, setHistoryBillSales] = useState([]);
 
     useEffect(() => {
         fetchLastBill();
@@ -204,6 +207,38 @@ function Sale() {
         }
     }
 
+    const handleLastBill = async () => {
+        try {
+            await axios.get(Config.api + '/api/Book/LastBill/' + billSaleId, Config.headers).then(res => {
+                setLastBillSaleDetails(res.data.results);
+            }).catch(err => {
+                throw err.response.data;
+            })
+        } catch (err) {
+            Swal.fire({
+                title: 'error',
+                text: err.message,
+                icon: 'error'
+            })
+        }
+    }
+
+    const handleHistoryBillSale = async () => {
+        try {
+            await axios.get(Config.api + '/api/Book/HistoryBillSale', Config.headers).then(res => {
+                setHistoryBillSales(res.data.results);
+            }).catch(err => {
+                throw err.response.data;
+            })
+        } catch (err) {
+            Swal.fire({
+                title: 'error',
+                text: err.message,
+                icon: 'error'
+            })
+        }
+    }
+
     return (
         <>
             <Template>
@@ -232,11 +267,11 @@ function Sale() {
                                 <i className='fa fa-check mr-2'></i>
                                 Closing Sell
                             </button>
-                            <button className='btn btn-info btn-lg'>
+                            <button onClick={handleHistoryBillSale} data-toggle='modal' data-target='#modalHistoryBillSale' className='btn btn-info btn-lg'>
                                 <i className='fa fa-list-alt mr-2'></i>
                                 Sales History
                             </button>
-                            <button className='btn btn-primary btn-lg'>
+                            <button onClick={handleLastBill} data-toggle="modal" data-target='#modalLastBill' className='btn btn-primary btn-lg'>
                                 <i className='fa fa-file mr-2'></i>
                                 Last Bill
                             </button>
@@ -334,6 +369,66 @@ function Sale() {
                         </>
                     }
                 </div>
+            </Modal>
+
+            <Modal title='Last Bill Sale' id='modalLastBill' modalSize='modal-lg'>
+                <table className='table table-bordered table-striped'>
+                    <thead>
+                        <tr className='bg-dark'>
+                            <th>#</th>
+                            <th>ISBN</th>
+                            <th>List</th>
+                            <th className='text-right'>Price</th>
+                            <th className='text-right'>Quantity</th>
+                            <th className='text-right'>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        { LastBillSaleDetails.length > 0 ? LastBillSaleDetails.map((item, index) => 
+                        <tr>
+                            <td>{index + 1}</td>
+                            <td>{item.isbn}</td>
+                            <td>{item.name}</td>
+                            <td className='text-right'>{item.price.toLocaleString('th-TH')}</td>
+                            <td className='text-right'>{item.qty}</td>
+                            <td className='text-right'>{(item.qty * item.price).toLocaleString('th-TH')}</td>
+                        </tr>
+                        ) : '' }
+                    </tbody>
+                </table>
+            </Modal>
+
+            <Modal title='Sales History' id='modalHistoryBillSale' modalSize='modal-lg'>
+                <table className='table table-bordered table-striped'>
+                    <thead>
+                        <tr className='bg-dark'>
+                            <th>#</th>
+                            <th>Bill Number</th>
+                            <th>Payment Date</th>
+                            <th>Time</th>
+                            <th>ISBN</th>
+                            <th>List</th>
+                            <th className='text-right'>Price</th>
+                            <th className='text-right'>Quantity</th>
+                            <th className='text-right'>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        { historyBillSales.length > 0 ? historyBillSales.map((item, index) => 
+                        <tr>
+                            <td>{index + 1}</td>
+                            <td>{item.bill_sale_id}</td>
+                            <td>{dayjs(item.pay_at).format('DD/MM/YYYY')}</td>
+                            <td>{dayjs(item.pay_at).format('HH:mm')}</td>
+                            <td>{item.isbn}</td>
+                            <td>{item.name}</td>
+                            <td className='text-right'>{item.price.toLocaleString('th-TH')}</td>
+                            <td className='text-right'>{item.qty}</td>
+                            <td className='text-right'>{(item.qty * item.price).toLocaleString('th-TH')}</td>
+                        </tr>
+                        ) : ''}
+                    </tbody>
+                </table>
             </Modal>
         </>
     )
