@@ -10,6 +10,7 @@ import UserProfile from './pages/UserProfile';
 import Product from './pages/Product';
 import Sale from './pages/Sale';
 import ReportBillSale from './pages/ReportBillSale';
+import ReportSumSalePerDay from './pages/ReportSumSalePerDay';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: "/reportBillSale",
     element: <ReportBillSale />
+  },
+  {
+    path: "/reportSumSalePerDay",
+    element: <ReportSumSalePerDay />
   }
 ]);
 
