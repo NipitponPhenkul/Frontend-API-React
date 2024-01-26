@@ -83,7 +83,7 @@ function Sidebar() {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link to='/reportBillSale' className="nav-link">
+                                <Link to='/reportSumSalePerMonth' className="nav-link">
                                     <i className="nav-icon fa fa-file-alt"></i>
                                     <p>Bill Sale (MONTH)</p>
                                 </Link>
