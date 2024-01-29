@@ -103,7 +103,7 @@ function ReportSumSalePerDay() {
                         <table className='table table-bordered table-striped mt-3'>
                             <thead>
                                 <tr>
-                                    <th width='100px'>Date</th>
+                                    <th width='100px'>Day</th>
                                     <th>Sales</th>
                                 </tr>
                             </thead>

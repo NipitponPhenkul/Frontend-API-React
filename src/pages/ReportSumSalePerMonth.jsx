@@ -24,6 +24,27 @@ function ReportSumSalePerMonth() {
         return arr;
     })
 
+    
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            axios.get(Config.api + '/api/Report/SumSalePerYear/' + year, Config.headers).then(res => {
+                setMonths(res.data.results);
+            }).catch(err => {
+                throw err.response.data;
+            })
+        } catch (e) {
+            Swal.fire({
+                title: 'error',
+                text: e.message,
+                icon: 'error'
+            })
+        }
+    }
+
     return (
         <>
             <Template>
@@ -47,13 +68,30 @@ function ReportSumSalePerMonth() {
                                 </div>
                                 
                                 <div className='col-4'>
-                                    <button className='btn btn-primary'>
+                                    <button onClick={fetchData} className='btn btn-primary'>
                                         <i className='fa fa-check mr-2'></i>
                                         Show
                                     </button>
                                 </div>
                             </div>
                         </div>
+
+                        <table className='table table-bordered table-striped mt-3'>
+                            <thead>
+                                <tr>
+                                    <th width='100px'>Month</th>
+                                    <th>Sales</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { months.length > 0 ? months.map(item => 
+                                <tr>
+                                    <td>{item.month}</td>
+                                    <td className='text-right'>{item.totalSum.toLocaleString('th-TH')}</td>
+                                </tr>
+                                ) : ''}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </Template>
